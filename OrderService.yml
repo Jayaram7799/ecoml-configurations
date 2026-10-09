@@ -1,0 +1,98 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: OrderService
+
+  datasource:
+    url: jdbc:mysql://ecommerce-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/order_db2?createDatabaseIfNotExist=true
+    username: admin
+    password: Admin123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  kafka:
+    bootstrap-servers: kafka-1:29092,kafka-2:29092,kafka-3:29092
+
+    # ============================================================
+    # PRODUCER
+    # ============================================================
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+      properties:
+        spring.json.add.type.headers: true
+
+        # Production reliability
+        acks: all
+        enable.idempotence: true
+        retries: 10
+        retry.backoff.ms: 1000
+
+    # ============================================================
+    # CONSUMER
+    # ============================================================
+
+    consumer:
+      group-id: order-group-v2
+      auto-offset-reset: earliest
+
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      properties:
+        spring.json.trusted.packages: "in.btm.kafka.event"
+        spring.json.use.type.headers: true
+
+    # ============================================================
+    # LISTENER
+    # ============================================================
+
+    listener:
+      ack-mode: record
+
+# ================================================================
+# EUREKA
+# ================================================================
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://serviceregistry:8761/eureka
+
+# ================================================================
+# ACTUATOR
+# ================================================================
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# ================================================================
+# LOGGING
+# ================================================================
+
+logging:
+  level:
+    org.springframework.kafka: INFO
+    in.btm: DEBUG
+
+# ================================================================
+# OUTBOX PUBLISHER
+# ================================================================
+
+outbox:
+  publisher:
+    batch-size: 100
+    fixed-delay: 5000

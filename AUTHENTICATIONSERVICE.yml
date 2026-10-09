@@ -1,0 +1,69 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: AUTHENTICATIONSERVICE
+
+  datasource:
+    url: jdbc:mysql://ecommerce-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/BtmAuthUser?createDatabaseIfNotExist=true
+    username: admin
+    password: Admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Spring Boot Admin
+  boot:
+    admin:
+      client:
+        url: http://admin-server:1111
+
+  # Gmail SMTP
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gogulajayaram123@gmail.com
+    password: yekf dvzb dheg vuge
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 15000
+          timeout: 15000
+          writetimeout: 15000
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+# Eureka
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    service-url:
+      defaultZone: http://serviceregistry:8761/eureka
+app:
+  frontend-url: https://main.d1gezrhyyl9lz2.amplifyapp.com
+
+# JWT
+jwt:
+  secret: ${JWT_SECRET:357638792F423F4428472B4B6250655368566D597133397A2443264629}
+  expiration: 86400000

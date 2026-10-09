@@ -1,0 +1,89 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: CartService
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+  boot:
+    admin:
+      client:
+        url: http://admin-server:1111
+        instance:
+          prefer-ip: true
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+      timeout: 6000
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://serviceregistry:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics,prometheus,circuitbreakers,circuitbreakerevents
+
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    circuitbreakers:
+      enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      PRODUCT-SERVICE:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 60
+        slow-call-duration-threshold: 3s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+
+        record-exceptions:
+          - feign.FeignException
+          - feign.RetryableException
+          - java.net.ConnectException
+          - java.net.SocketTimeoutException
+
+        ignore-exceptions:
+          - in.btm.exceptions.ProductNotFoundException
+
+jwt:
+  secret: ${JWT_SECRET:357638792F423F4428472B4B6250655368566D597133397A2443264629}
+  expiration: 86400000
+
+logging:
+  level:
+    org.springframework.cloud.openfeign: INFO
+    io.github.resilience4j: INFO

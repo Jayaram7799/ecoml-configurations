@@ -1,0 +1,60 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: PaymentService
+
+  datasource:
+    url: jdbc:mysql://ecommerce-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/payment_db?createDatabaseIfNotExist=true
+    username: admin
+    password: Admin123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  kafka:
+    bootstrap-servers: kafka-1:29092,kafka-2:29092,kafka-3:29092
+
+    consumer:
+      group-id: payment-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: in.btm.kafka.event.OrderCreatedEvent
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+      properties:
+        spring.json.add.type.headers: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://serviceregistry:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    org.springframework.kafka: INFO
+    in.btm: DEBUG
+
+razorpay:
+  key:
+    id: rzp_test_SCQRqu0qW6vEYz
+    secret: H0eOfEdY4AMOqxnrmNUifX1y

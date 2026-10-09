@@ -1,0 +1,41 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: UserService
+  boot:
+    admin:
+      client:
+        url: http://admin-server:1111   # Admin Server
+        instance:
+          prefer-ip: true
+
+  datasource:
+    url: jdbc:mysql://ecommerce-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/BtmEcommerceCustomer?createDatabaseIfNotExist=true
+    username: admin
+    password: Admin123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    service-url:
+      defaultZone: http://serviceregistry:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+jwt:
+  secret: ${JWT_SECRET:357638792F423F4428472B4B6250655368566D597133397A2443264629}
+  expiration: 86400000
