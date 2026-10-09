@@ -12,7 +12,7 @@ spring:
           prefer-ip: true
 
   datasource:
-    url: jdbc:mysql://ecommerce-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/BtmEcommerceCustomer?createDatabaseIfNotExist=true
+    url: jdbc:mysql://ecoml-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/BtmEcommerceCustomer?createDatabaseIfNotExist=true
     username: admin
     password: Admin123
     driver-class-name: com.mysql.cj.jdbc.Driver
