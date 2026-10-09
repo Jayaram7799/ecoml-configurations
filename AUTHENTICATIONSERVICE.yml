@@ -6,7 +6,7 @@ spring:
     name: AUTHENTICATIONSERVICE
 
   datasource:
-    url: jdbc:mysql://ecoml-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/btmproductsdb?createDatabaseIfNotExist=true
+    url: jdbc:mysql://ecoml-mysql.czu8c2wqe246.ap-south-1.rds.amazonaws.com:3306/btmauthusers?createDatabaseIfNotExist=true
     username: admin
     password: Admin123
 
